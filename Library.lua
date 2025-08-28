@@ -3427,10 +3427,7 @@ do
 
     function Funcs:AddSlider(Idx, Info)
         Info = Library:Validate(Info, Templates.Slider)
-        -- inside Funcs:AddSlider, when building the Slider table:
-        Step = Info.Step or 1, -- default to 1 if not provided
-
-
+        
         local Groupbox = self
         local Container = Groupbox.Container
 
@@ -3644,7 +3641,6 @@ do
                 local OldValue = Slider.Value
                 local rawValue = Slider.Min + ((Slider.Max - Slider.Min) * Scale)
 
-                -- Snap to step (default to 1 if Info.Step isn't given)
                 local step = Info.Step or 1
                 Slider.Value = math.floor(rawValue / step + 0.5) * step
                 
