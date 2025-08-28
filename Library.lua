@@ -3427,6 +3427,9 @@ do
 
     function Funcs:AddSlider(Idx, Info)
         Info = Library:Validate(Info, Templates.Slider)
+        -- inside Funcs:AddSlider, when building the Slider table:
+        Step = Info.Step or 1, -- default to 1 if not provided
+
 
         local Groupbox = self
         local Container = Groupbox.Container
@@ -3639,7 +3642,15 @@ do
                 local Scale = math.clamp((Location - Bar.AbsolutePosition.X) / Bar.AbsoluteSize.X, 0, 1)
 
                 local OldValue = Slider.Value
-                Slider.Value = Round(Slider.Min + ((Slider.Max - Slider.Min) * Scale), Info.Rounding)
+                local rawValue = Slider.Min + ((Slider.Max - Slider.Min) * Scale)
+
+                -- Snap to step (default to 1 if Info.Step isn't given)
+                local step = Info.Step or 1
+                Slider.Value = math.floor(rawValue / step + 0.5) * step
+                
+                -- Optional: still apply rounding if you want
+                Slider.Value = Round(Slider.Value, Info.Rounding)
+
 
                 Slider:Display()
                 if Slider.Value ~= OldValue then
